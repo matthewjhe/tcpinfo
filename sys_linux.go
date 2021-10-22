@@ -66,6 +66,7 @@ type SysInfo struct {
 	MinRTT                  time.Duration `json:"min_rtt"`            // current measured minimum RTT; zero means not available
 	DataSegsOut             uint          `json:"data_segs_out"`      // # of segments sent containing a positive length data segment
 	DataSegsIn              uint          `json:"data_segs_in"`       // # of segments received containing a positive length data segment
+	DeliveryRate            uint64        `json:"delivery_rate"`      // # The most recent goodput, as measured by tcp_rate_gen()
 }
 
 var sysStates = [12]State{Unknown, Established, SynSent, SynReceived, FinWait1, FinWait2, TimeWait, Closed, CloseWait, LastAck, Listen, Closing}
@@ -135,6 +136,7 @@ func parseInfo(b []byte) (tcpopt.Option, error) {
 		MinRTT:                  time.Duration(ti.Min_rtt) * time.Microsecond,
 		DataSegsIn:              uint(ti.Data_segs_in),
 		DataSegsOut:             uint(ti.Data_segs_out),
+		DeliveryRate:            uint64(ti.Delivery_rate),
 	}
 	return i, nil
 }
